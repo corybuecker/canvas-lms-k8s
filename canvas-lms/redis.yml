@@ -1,0 +1,4 @@
+production:
+  servers:
+  - <%= ENV.fetch("REDIS") %>
+

@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  web:
+    build: ./canvas-lms
+    depends_on:
+    - database
+    - redis
+    environment: &environment
+    - DATABASE_HOST=database
+    - DATABASE_USER=postgres
+    - DATABASE_PASSWORD=
+    - ENCRYPTION_KEY=30be872610ab7d5ff53e64362d0cc75f4d54ae9e3d0cebd4331cef=
+    - CANVAS_URL=http://localhost:3000
+    - CANVAS_DOMAIN=localhost:3000
+    - CANVAS_SSL=false
+    - RAILS_ENV=production
+    - REDIS=redis://redis
+    - CANVAS_LMS_ACCOUNT_NAME=Sandbox
+    - CANVAS_LMS_ADMIN_EMAIL=admin@example.com
+    - CANVAS_LMS_ADMIN_PASSWORD=password1234
+    - CANVAS_LMS_STATS_COLLECTION=opt_out
+    ports:
+    - 3000:3000
+  worker:
+    build: ./canvas-lms
+    depends_on:
+    - database
+    - redis
+    environment: *environment
+    command:
+    - bundle
+    - exec
+    - script/delayed_job
+    - run
+  database:
+    image: postgres:9.6
+    ports:
+    - 5432:5432
+    environment:
+    - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+    - pgdata:/var/lib/postgresql/data/pgdata
+  redis:
+    image: redis:4
+volumes:
+  pgdata:
