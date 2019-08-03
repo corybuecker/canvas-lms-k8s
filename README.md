@@ -1,9 +1,12 @@
 # canvas-lms-k8s
+
+Please note that that should not be used in a production environment unless you change the secrets and set up a proper K-V store.
+
 Helm and Docker Compose scripts for running the stable branch of Canvas
 
 # Pre-built image
 
-Please feel free to use my pre-built image from https://hub.docker.com/corybuecker/canvas-lms. 
+Please feel free to use my pre-built image from https://hub.docker.com/r/corybuecker/canvas-lms. 
 
 Current Canvas version: 2019-07-31
 
