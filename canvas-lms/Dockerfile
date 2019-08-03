@@ -1,5 +1,5 @@
 FROM ruby:2.4-alpine AS builder
-LABEL version="2019-07-13"
+LABEL version="2019-07-31"
 
 ENV RAILS_ENV "production"
 ENV COMPILE_ASSETS_NPM_INSTALL 0
@@ -25,7 +25,7 @@ RUN mkdir -p log tmp/pids public/assets app/stylesheets/brandable_css_brands && 
 
 RUN echo "gem 'tzinfo-data'" >> Gemfile
 RUN bundle install
-RUN CANVAS_BUILD_CONCURRENCY=1 bundle exec rake canvas:compile_assets
+RUN COMPILE_ASSETS_STYLEGUIDE="0" COMPILE_ASSETS_API_DOCS="0" SKIP_SOURCEMAPS="1" CANVAS_BUILD_CONCURRENCY=1 bundle exec rake canvas:compile_assets
 
 ADD database.yml ${APP_DIR}/config/database.yml
 ADD security.yml ${APP_DIR}/config/security.yml
@@ -41,8 +41,9 @@ RUN apk add vim postgresql-dev sqlite-dev xmlsec-dev
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY --from=builder /usr/local/lib/ruby/gems/2.4.0 /usr/local/lib/ruby/gems/2.4.0
+ADD start.sh /app/start.sh
 
 ENV RAILS_ENV "production"
 WORKDIR /app
 
-CMD ["bundle", "exec", "puma", "-p", "3000", "-w", "1", "-e", "production"]
+CMD ["/app/start.sh"]

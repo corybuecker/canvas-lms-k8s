@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+  web:
+    image: gcr.io/bueckered/canvas-lms:2019-07-31
+  worker:
+    image: gcr.io/bueckered/canvas-lms:2019-07-31
